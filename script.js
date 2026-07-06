@@ -1,505 +1,68 @@
-/* ===================================================
-   Jaa Al Haq Quran Academy — Design Tokens
-   Palette: deep teal-navy, warm gold, ivory
-=================================================== */
-:root{
-  --navy-deep:   #071c26;
-  --navy:        #0c2b38;
-  --navy-light:  #123c4d;
-  --gold:        #c9a227;
-  --gold-light:  #e7c766;
-  --cream:       #f7f1e3;
-  --cream-dim:   #efe6d1;
-  --ink:         #1c1c1c;
-  --text-soft:   rgba(247,241,227,.78);
+// ===================== Mobile menu toggle =====================
+const menuToggle = document.getElementById("menuToggle");
+const nav = document.getElementById("nav");
 
-  --font-display: 'Amiri', serif;
-  --font-body: 'Poppins', sans-serif;
+menuToggle.addEventListener("click", () => {
+  nav.classList.toggle("open");
+  menuToggle.classList.toggle("active");
+});
 
-  --radius: 14px;
-  --transition: .35s cubic-bezier(.4,0,.2,1);
-}
+// ===================== Smooth scroll + close mobile menu on click =====================
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+    nav.classList.remove("open");
+  });
+});
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+// ===================== FAQ accordion =====================
+document.querySelectorAll('.faq-item').forEach(item => {
+  const question = item.querySelector('.faq-question');
+  question.addEventListener('click', () => {
+    const alreadyActive = item.classList.contains('active');
 
-html{ scroll-behavior:smooth; }
+    // Close all other items
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
 
-body{
-  font-family: var(--font-body);
-  background: var(--navy);
-  color: var(--text-soft);
-  line-height:1.7;
-  overflow-x:hidden;
-}
+    if (!alreadyActive) {
+      item.classList.add('active');
+    }
+  });
+});
 
-h1,h2,h3,h4{
-  font-family: var(--font-display);
-  color: var(--gold-light);
-  line-height:1.25;
-}
+// ===================== Scroll reveal animation =====================
+const revealTargets = document.querySelectorAll("section");
 
-a{ color:inherit; }
-ul{ list-style:none; }
+revealTargets.forEach(section => section.classList.add("reveal"));
 
-.eyebrow{
-  color: var(--gold);
-  text-transform:uppercase;
-  letter-spacing:2.5px;
-  font-size:13px;
-  font-weight:600;
-  margin-bottom:10px;
-}
-.center{ text-align:center; }
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
 
-/* ===================== Header ===================== */
-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  padding:16px 6%;
-  background: rgba(7,28,38,.92);
-  backdrop-filter: blur(8px);
-  position:sticky;
-  top:0;
-  z-index:1000;
-  border-bottom:1px solid rgba(201,162,39,.25);
-}
+revealTargets.forEach(section => observer.observe(section));
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.logo-icon{ font-size:26px; }
-.logo h2{
-  font-size:20px;
-  color:var(--cream);
-  white-space:nowrap;
-}
-.logo h2 span{ color:var(--gold); display:block; font-size:12px; letter-spacing:1px; font-family:var(--font-body); }
-
-nav{
-  display:flex;
-  gap:26px;
-  flex:1;
-  justify-content:center;
-}
-nav a{
-  text-decoration:none;
-  font-weight:500;
-  font-size:15px;
-  color: var(--text-soft);
-  position:relative;
-  transition: color var(--transition);
-}
-nav a::after{
-  content:"";
-  position:absolute;
-  left:0; bottom:-6px;
-  width:0; height:2px;
-  background:var(--gold);
-  transition: width var(--transition);
-}
-nav a:hover{ color:var(--gold-light); }
-nav a:hover::after{ width:100%; }
-
-.nav-cta{ white-space:nowrap; }
-
-.menu-toggle{
-  display:none;
-  flex-direction:column;
-  gap:5px;
-  background:none;
-  border:none;
-  cursor:pointer;
-  padding:6px;
-}
-.menu-toggle span{
-  width:24px; height:2px;
-  background:var(--gold);
-  transition: var(--transition);
-}
-
-/* ===================== Buttons ===================== */
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  background: linear-gradient(135deg,var(--gold-light),var(--gold));
-  color: var(--navy-deep);
-  padding:14px 30px;
-  border-radius:50px;
-  text-decoration:none;
-  font-weight:600;
-  font-size:15px;
-  border:none;
-  cursor:pointer;
-  transition: transform var(--transition), box-shadow var(--transition);
-  box-shadow: 0 8px 20px rgba(201,162,39,.25);
-}
-.btn:hover{
-  transform:translateY(-3px);
-  box-shadow: 0 12px 28px rgba(201,162,39,.4);
-}
-.btn-small{ padding:10px 22px; font-size:14px; }
-.btn-outline{
-  background:transparent;
-  color:var(--cream);
-  border:1.5px solid rgba(247,241,227,.4);
-  box-shadow:none;
-}
-.btn-outline:hover{
-  border-color:var(--gold);
-  color:var(--gold-light);
-  box-shadow:none;
-}
-.btn-dark{
-  background: var(--navy-deep);
-  color: var(--gold-light);
-  box-shadow: 0 8px 20px rgba(0,0,0,.3);
-}
-.btn-dark:hover{ color:var(--gold-light); }
-
-/* ===================== Hero ===================== */
-.hero{
-  position:relative;
-  padding:140px 6% 100px;
-  text-align:center;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(201,162,39,.12), transparent 45%),
-    radial-gradient(circle at 80% 80%, rgba(201,162,39,.10), transparent 50%),
-    linear-gradient(180deg,var(--navy-deep),var(--navy));
-  overflow:hidden;
-}
-
-.hero-pattern{
-  position:absolute;
-  inset:0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23c9a227' stroke-width='0.6' opacity='0.35'%3E%3Cpath d='M40 0 L60 20 L40 40 L20 20 Z'/%3E%3Cpath d='M40 40 L60 60 L40 80 L20 60 Z'/%3E%3Cpath d='M0 40 L20 20 L40 40 L20 60 Z'/%3E%3Cpath d='M80 40 L60 20 L40 40 L60 60 Z'/%3E%3C/g%3E%3C/svg%3E");
-  background-size:80px 80px;
-  opacity:.5;
-  pointer-events:none;
-}
-
-.hero-content{ position:relative; z-index:2; max-width:780px; margin:auto; }
-
-.hero h1{
-  font-size:52px;
-  margin-bottom:16px;
-  color:var(--cream);
-}
-.hero h3{
-  font-weight:400;
-  color:var(--gold);
-  font-size:19px;
-  margin-bottom:18px;
-  font-family:var(--font-body);
-}
-.hero-text{
-  max-width:600px;
-  margin:0 auto 34px;
-  color:var(--text-soft);
-}
-.hero-buttons{
-  display:flex;
-  gap:18px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-bottom:60px;
-}
-
-.hero-stats{
-  display:flex;
-  justify-content:center;
-  gap:60px;
-  flex-wrap:wrap;
-  padding-top:30px;
-  border-top:1px solid rgba(201,162,39,.25);
-}
-.stat{ display:flex; flex-direction:column; align-items:center; gap:4px; }
-.stat strong{ font-family:var(--font-display); font-size:30px; color:var(--gold-light); }
-.stat span{ font-size:13px; color:var(--text-soft); letter-spacing:.5px; }
-
-/* ===================== Sections ===================== */
-section{
-  padding:90px 6%;
-  max-width:1200px;
-  margin:auto;
-}
-section h2{
-  text-align:center;
-  font-size:34px;
-  margin-bottom:44px;
-}
-
-/* About */
-.about-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:34px;
-  max-width:1000px;
-  margin:auto;
-}
-.about-text{ color:var(--text-soft); }
-
-/* Cards */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:26px;
-}
-.card{
-  background: var(--navy-light);
-  padding:34px 26px;
-  border-radius:var(--radius);
-  text-align:center;
-  border:1px solid rgba(201,162,39,.2);
-  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-}
-.card-icon{
-  font-size:32px;
-  color:var(--gold);
-  margin-bottom:18px;
-  display:inline-block;
-}
-.card h3{ font-size:20px; margin-bottom:10px; }
-.card p{ font-size:14.5px; color:var(--text-soft); }
-.card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 16px 34px rgba(0,0,0,.35);
-  border-color:var(--gold);
-}
-
-/* Why choose us */
-.why{ background: var(--navy-deep); }
-.why-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:18px;
-  max-width:1000px;
-  margin:auto;
-}
-.why-item{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  background: rgba(201,162,39,.06);
-  border:1px solid rgba(201,162,39,.18);
-  padding:16px 20px;
-  border-radius:10px;
-  font-size:15px;
-  color:var(--cream);
-  transition: background var(--transition);
-}
-.why-item:hover{ background: rgba(201,162,39,.14); }
-.why-item i{ color:var(--gold); font-size:18px; width:22px; text-align:center; }
-
-/* Teachers */
-.teacher-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:30px;
-  max-width:900px;
-  margin:auto;
-}
-.teacher-card{
-  background: var(--navy-light);
-  border:1px solid rgba(201,162,39,.2);
-  border-radius:var(--radius);
-  padding:44px 30px;
-  text-align:center;
-  transition: transform var(--transition);
-}
-.teacher-card:hover{ transform:translateY(-6px); }
-.teacher-icon{
-  width:76px; height:76px;
-  margin:0 auto 20px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  background: linear-gradient(135deg,var(--gold-light),var(--gold));
-  color:var(--navy-deep);
-  font-size:32px;
-}
-.teacher-role{ color:var(--gold); font-size:13px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:14px; }
-.teacher-card p:not(.teacher-role){ color:var(--text-soft); font-size:15px; }
-
-/* Free trial banner */
-.trial{ padding:0 6%; max-width:100%; }
-.trial-box{
-  max-width:1200px;
-  margin:auto;
-  background: linear-gradient(120deg,var(--gold),var(--gold-light));
-  color:var(--navy-deep);
-  border-radius:20px;
-  padding:60px 40px;
-  text-align:center;
-}
-.trial-box h2{ color:var(--navy-deep); margin-bottom:14px; }
-.trial-box p{ max-width:560px; margin:0 auto 28px; color:rgba(7,28,38,.85); }
-
-/* Testimonials */
-.testimonial{ text-align:left; position:relative; }
-.quote-icon{ color:rgba(201,162,39,.35); font-size:22px; margin-bottom:14px; }
-.testimonial p{ font-style:italic; margin-bottom:16px; }
-.stars{ color:var(--gold); letter-spacing:2px; margin-bottom:10px; }
-.testimonial h4{ font-family:var(--font-body); font-size:14px; color:var(--gold-light); font-weight:600; }
-
-/* FAQ */
-.faq-list{ max-width:800px; margin:auto; display:flex; flex-direction:column; gap:14px; }
-.faq-item{
-  background: var(--navy-light);
-  border:1px solid rgba(201,162,39,.2);
-  border-radius:10px;
-  overflow:hidden;
-}
-.faq-question{
-  width:100%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:none;
-  border:none;
-  color:var(--cream);
-  font-family:var(--font-body);
-  font-size:16px;
-  font-weight:500;
-  padding:20px 24px;
-  cursor:pointer;
-  text-align:left;
-}
-.faq-question i{ color:var(--gold); transition: transform var(--transition); }
-.faq-item.active .faq-question i{ transform:rotate(180deg); }
-.faq-answer{
-  max-height:0;
-  overflow:hidden;
-  transition: max-height var(--transition);
-  padding:0 24px;
-}
-.faq-answer p{ padding-bottom:20px; color:var(--text-soft); font-size:14.5px; }
-.faq-item.active .faq-answer{ max-height:200px; }
-
-/* Contact */
-.contact-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:24px;
-  max-width:900px;
-  margin:auto;
-}
-.contact-card{
-  background: var(--navy-light);
-  border:1px solid rgba(201,162,39,.2);
-  border-radius:var(--radius);
-  padding:34px 20px;
-  text-align:center;
-  text-decoration:none;
-  transition: transform var(--transition), border-color var(--transition);
-}
-.contact-card:hover{ transform:translateY(-6px); border-color:var(--gold); }
-.contact-card i{ font-size:28px; color:var(--gold); margin-bottom:14px; }
-.contact-card h3{ font-size:17px; margin-bottom:6px; }
-.contact-card p{ font-size:14px; color:var(--text-soft); word-break:break-word; }
-
-/* ===================== Footer ===================== */
-footer{
-  background: var(--navy-deep);
-  padding:70px 6% 0;
-  border-top:1px solid rgba(201,162,39,.2);
-}
-.footer-grid{
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr;
-  gap:40px;
-  max-width:1200px;
-  margin:auto;
-  padding-bottom:40px;
-}
-.footer-col h3{ font-size:19px; margin-bottom:14px; color:var(--cream); }
-.footer-col h3 .logo-icon{ font-size:18px; }
-.footer-col h4{ color:var(--gold-light); font-size:15px; margin-bottom:16px; font-family:var(--font-body); }
-.footer-col p{ font-size:14px; color:var(--text-soft); }
-.footer-col a{
-  display:block;
-  text-decoration:none;
-  color:var(--text-soft);
-  font-size:14px;
-  margin-bottom:12px;
-  transition: color var(--transition);
-}
-.footer-col a:hover{ color:var(--gold-light); }
-.footer-col a i{ color:var(--gold); margin-right:8px; width:16px; }
-
-.footer-bottom{
-  border-top:1px solid rgba(201,162,39,.15);
-  text-align:center;
-  padding:22px 0;
-  font-size:13px;
-  color:var(--text-soft);
-}
-
-/* ===================== WhatsApp Floating Button ===================== */
-.whatsapp{
-  position:fixed;
-  bottom:24px;
-  right:24px;
-  background:#25D366;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:30px;
-  text-decoration:none;
-  box-shadow:0 6px 22px rgba(0,0,0,.35);
-  transition: transform var(--transition);
-  z-index:999;
-  animation: pulse 2.4s infinite;
-}
-.whatsapp:hover{ transform:scale(1.1); animation:none; }
-
-@keyframes pulse{
-  0%{ box-shadow:0 6px 22px rgba(0,0,0,.35), 0 0 0 0 rgba(37,211,102,.5); }
-  70%{ box-shadow:0 6px 22px rgba(0,0,0,.35), 0 0 0 16px rgba(37,211,102,0); }
-  100%{ box-shadow:0 6px 22px rgba(0,0,0,.35), 0 0 0 0 rgba(37,211,102,0); }
-}
-
-/* ===================== Scroll Reveal (JS hook) ===================== */
-.reveal{ opacity:0; transform:translateY(40px); transition: all .8s ease; }
-.reveal.visible{ opacity:1; transform:translateY(0); }
-
-/* ===================== Responsive ===================== */
-@media(max-width:900px){
-  .about-grid{ grid-template-columns:1fr; }
-  .footer-grid{ grid-template-columns:1fr 1fr; }
-}
-
-@media(max-width:768px){
-  nav{
-    position:fixed;
-    top:74px; left:0; right:0;
-    background: var(--navy-deep);
-    flex-direction:column;
-    align-items:flex-start;
-    padding:20px 8%;
-    gap:16px;
-    transform:translateY(-150%);
-    opacity:0;
-    transition: var(--transition);
-    border-bottom:1px solid rgba(201,162,39,.25);
+// ===================== Sticky header shadow on scroll =====================
+const header = document.querySelector("header");
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 10) {
+    header.style.boxShadow = "0 6px 20px rgba(0,0,0,.35)";
+  } else {
+    header.style.boxShadow = "none";
   }
-  nav.open{ transform:translateY(0); opacity:1; }
-  .menu-toggle{ display:flex; }
-  .nav-cta{ display:none; }
+});
 
-  .hero h1{ font-size:34px; }
-  .hero-stats{ gap:30px; }
-  section h2{ font-size:27px; }
-  .footer-grid{ grid-template-columns:1fr; }
+// ===================== Footer year auto update =====================
+const footerBottom = document.querySelector(".footer-bottom p");
+if (footerBottom) {
+  const year = new Date().getFullYear();
+  footerBottom.innerHTML = `&copy; ${year} Jaa Al Haq Quran Academy. All Rights Reserved.`;
 }
